@@ -5,7 +5,7 @@ public class PlayerMovement : MonoBehaviour
 {
     private Rigidbody2D body;
 
-    private void Awake()
+    private void Awake() // Hey
     {
         body = GetComponent<Rigidbody2D>(); //Возьмет компонент Rigidbody у прикреп. объекта       
     }
