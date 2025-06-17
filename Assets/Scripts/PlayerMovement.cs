@@ -25,7 +25,7 @@ public class PlayerMovement : MonoBehaviour
     {
         float horizontalInput = Input.GetAxis("Horizontal");
 
-        body.linearVelocity = new Vector2(horizontalInput * speed,body.linearVelocity.y); // Vector?
+        body.linearVelocity = new Vector2(horizontalInput * speed,body.linearVelocity.y);
 
         //Flip player when moving left-right
         if (horizontalInput > 0.01f)
@@ -45,16 +45,19 @@ public class PlayerMovement : MonoBehaviour
         {
             body.linearVelocity = new Vector2(horizontalInput * speed, body.linearVelocity.y);
 
-            if (onWall() && isGronded())
+            if (onWall() && !isGronded())
             {
+                Debug.Log("Blok");
                 body.gravityScale = 0;
                 body.linearVelocity = Vector2.zero;
             }
             else
                 body.gravityScale = 7;
-            
+
             if (Input.GetKey(KeyCode.Space))
+            {
                 Jump();
+            }
         }
         else
             wallJumpCooldown += Time.deltaTime;
@@ -63,16 +66,18 @@ public class PlayerMovement : MonoBehaviour
 
     private void Jump()
     {
-        if (!isGronded())
+        if (isGronded())
         {
             body.linearVelocity = new Vector2(body.linearVelocity.x, jumpPower);
             animator.SetTrigger("jump");
         }
-        else if (onWall() && isGronded())
+        else if (onWall() && !isGronded())
         {
-            wallJumpCooldown = 0;
-            body.linearVelocity = new Vector2(-Mathf.Sign(transform.localScale.x) * 3, 6);
+            var v = new Vector2(-Mathf.Sign(transform.localScale.x) * 3, 6);
+            body.linearVelocity = v;
+            Debug.Log($"wallJump. {v}");
         }
+        wallJumpCooldown = 0;
     }
     private void OnCollisionEnter2D(Collision2D collision)
     {
