@@ -8,10 +8,12 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private float jumpPower;
     [SerializeField] private LayerMask groundLayer;
     [SerializeField] private LayerMask wallLayer;
+    
     private Rigidbody2D body;
     private Animator animator;
     private BoxCollider2D boxCollider;
     private float wallJumpCooldown;
+    private float horizontalInput;
 
     
     private void Awake()
@@ -23,9 +25,9 @@ public class PlayerMovement : MonoBehaviour
     }
     private void Update()
     {
-        float horizontalInput = Input.GetAxis("Horizontal");
+         horizontalInput = Input.GetAxis("Horizontal");
 
-        body.linearVelocity = new Vector2(horizontalInput * speed,body.linearVelocity.y);
+    
 
         //Flip player when moving left-right
         if (horizontalInput > 0.01f)
@@ -33,8 +35,7 @@ public class PlayerMovement : MonoBehaviour
         else if (horizontalInput < -0.01f)
             transform.localScale = new Vector3(-1,1,1);
 
-        if (Input.GetKey(KeyCode.Space) && isGronded()) // Проверяет Нажатие клавиши
-            Jump();
+        
 
         //Set animator parameters
         animator.SetBool("Run", horizontalInput != 0);
@@ -47,7 +48,6 @@ public class PlayerMovement : MonoBehaviour
 
             if (onWall() && !isGronded())
             {
-                Debug.Log("Blok");
                 body.gravityScale = 0;
                 body.linearVelocity = Vector2.zero;
             }
@@ -55,9 +55,7 @@ public class PlayerMovement : MonoBehaviour
                 body.gravityScale = 7;
 
             if (Input.GetKey(KeyCode.Space))
-            {
                 Jump();
-            }
         }
         else
             wallJumpCooldown += Time.deltaTime;
@@ -73,11 +71,20 @@ public class PlayerMovement : MonoBehaviour
         }
         else if (onWall() && !isGronded())
         {
-            var v = new Vector2(-Mathf.Sign(transform.localScale.x) * 3, 6);
-            body.linearVelocity = v;
-            Debug.Log($"wallJump. {v}");
+            if (horizontalInput == 0)
+            {
+                var v = new Vector2(-Mathf.Sign(transform.localScale.x) * 10, 0);
+                transform.localScale = new Vector3(-Mathf.Sign(transform.localScale.x),transform.localScale.y, transform.localScale.z);
+            }
+            else 
+            {
+                var v = new Vector2(-Mathf.Sign(transform.localScale.x) * 3, 6);
+                body.linearVelocity = v;
+                Debug.Log($"wallJump. {v}");
+            }
+            wallJumpCooldown = 0;
+            
         }
-        wallJumpCooldown = 0;
     }
     private void OnCollisionEnter2D(Collision2D collision)
     {
