@@ -18,10 +18,9 @@ public class PlayerAttack : MonoBehaviour
 
     private void Update()
     {
-        if (Input.GetMouseButton(0) && cooldownTimer > attackCooldown && playerMovement.canAttack())
+        if (Input.GetMouseButton(0) && cooldownTimer > attackCooldown && playerMovement.canAttack()) //Проверка кулдауна и возможности атаки
             Attack();
-
-        cooldownTimer += Time.deltaTime;
+        cooldownTimer += Time.deltaTime; // обновление таймера
     }
 
     private void Attack()
@@ -29,16 +28,17 @@ public class PlayerAttack : MonoBehaviour
         anim.SetTrigger("attack");
         cooldownTimer = 0;
 
-        fireballs[FindFireball()].transform.position = firePoint.position;
-        fireballs[FindFireball()].GetComponent<Projectile>().SetDirection(Mathf.Sign(transform.localScale.x));
+        fireballs[FindFireball()].transform.position = firePoint.position; // Использует FindFireball для поиска свободного фаербола и устанавливает его на позицию?
+        fireballs[FindFireball()].GetComponent<Projectile>().SetDirection(Mathf.Sign(transform.localScale.x)); //направление выстрела
     }
     private int FindFireball()
     {
-        for (int i = 0; i < fireballs.Length; i++)
+        for (int i = 0; i < fireballs.Length; i++) // Length?(условие продолжения поиска)
         {
-            if (!fireballs[i].activeInHierarchy)
+            if (!fireballs[i].activeInHierarchy) // activeInHierarchy - свойтсво GameObject которое возвращает false если объект выключен
                 return i;
         }
         return 0;
     }
+
 }

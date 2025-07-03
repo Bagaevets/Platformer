@@ -14,8 +14,17 @@ public class PlayerMovement : MonoBehaviour
     private BoxCollider2D boxCollider;
     private float wallJumpCooldown;
     private float horizontalInput;
-
-    
+  /*
+    public float HorizontalInput { get { return horizontalInput; } set { horizontalInput = value; } }
+    public float GetHorizontalInput() 
+    { 
+        return horizontalInput; 
+    }
+    public void SetHorizontalInput(float value) 
+    {
+        horizontalInput = value;
+    }
+   */
     private void Awake()
     {
         //Grab references for rigidbody and animator from object
