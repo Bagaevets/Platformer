@@ -8,12 +8,15 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private float jumpPower;
     [SerializeField] private LayerMask groundLayer;
     [SerializeField] private LayerMask wallLayer;
-    
+
     private Rigidbody2D body;
     private Animator animator;
     private BoxCollider2D boxCollider;
     private float wallJumpCooldown;
     private float horizontalInput;
+
+    [Header("SFX")]
+    [SerializeField] private AudioClip jumpSound;
   /*
     public float HorizontalInput { get { return horizontalInput; } set { horizontalInput = value; } }
     public float GetHorizontalInput() 
@@ -63,8 +66,12 @@ public class PlayerMovement : MonoBehaviour
             else
                 body.gravityScale = 7;
 
-            if (Input.GetKey(KeyCode.Space))
+            if (Input.GetKeyDown(KeyCode.Space))
+            {
                 Jump();
+                
+            }
+
         }
         else
             wallJumpCooldown += Time.deltaTime;
@@ -75,8 +82,10 @@ public class PlayerMovement : MonoBehaviour
     {
         if (isGronded())
         {
+            
             body.linearVelocity = new Vector2(body.linearVelocity.x, jumpPower);
             animator.SetTrigger("jump");
+            SoundManager.instance.PlaySound(jumpSound);
         }
         else if (onWall() && !isGronded())
         {
@@ -92,7 +101,7 @@ public class PlayerMovement : MonoBehaviour
                 Debug.Log($"wallJump. {v}");
             }
             wallJumpCooldown = 0;
-            
+            SoundManager.instance.PlaySound(jumpSound);
         }
     }
 
